@@ -1,0 +1,21 @@
+import pandas as pd // file handeling
+import regrmodel as lr // class model written in python
+import numpy as np // to convert pandas dataframe to numpy array
+from sklearn import model_selection // to split the data into test and train 
+loc = r"D:\downloads\airfoil.txt" // file location 
+data = pd.read_csv(loc, names=['Frequency', 'Angle of attack', 'chordlength', 'Free_streem_velocity', 'displacement_thickness', 'Scaled sound pressure level'], delimiter = '\t') // names of the x and y features
+print(data.head())
+print(data.head())
+x = data.iloc[:,0:5]
+print(x.shape)
+y = data.iloc[:,5]
+print(y.shape)
+x=np.array(pd.DataFrame(x))// convert pandas dataframe to np array
+y=np.array(pd.DataFrame(y))
+x = (x-x.mean())/x.std()// standardizing only x features
+x_train, x_validation, y_train, y_validation = model_selection.train_test_split(x, y, test_size=0.25, random_state=7)
+regr = lr.linear_regr(x_train,y_train) // creating object and calling the class function
+print(regr.cost_function())
+print(regr.gradient_decent())
+print(regr.predict(x_validation,y_validation)) // result in percentage for test/ validation dataset
+print(regr.predict(x_train,y_train)) //result in percentage for train dataset 
