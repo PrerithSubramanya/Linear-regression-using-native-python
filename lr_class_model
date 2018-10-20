@@ -1,0 +1,47 @@
+import numpy as np
+// model name where 'x', 'alpha = learning rate,can be changed accordingly', 'iters = number of iterartions, can be changed aswell'.
+class linear_regr:
+    def __init__(self,x,y):
+        ones = np.ones([x.shape[0], 1])
+        self.x = np.concatenate((ones,x), axis = 1)
+        self.y = y
+        self.theeta = np.zeros((x.shape[1]+1,1))
+        # self.theeta = np.array([0,0,0,0,0,0])
+        self.alpha = 0.001
+        self.iters = 100000
+
+// cost function for the linear regression model=  error between 'y' and 'y_pred' 
+    def cost_function(self):
+        to_sum = np.power((self.x.dot(self.theeta) - self.y), 2)
+        a = np.sum(to_sum / (2 * len(self.y)))
+        return a
+
+// gradient decent reduces the error and updates theeta
+    def gradient_decent(self):
+
+        cost_list = []
+        for i in range(self.iters):
+            h = self.x.dot(self.theeta)
+            loss = h - self.y
+            gradient = self.x.T.dot(loss) / len(self.y)
+            self.theeta = self.theeta - self.alpha * gradient
+            #         theeta = theeta - (alpha/len(x))*np.sum(x*(x.dot(theeta.T)-y), axis =0)
+            cost = self.cost_function()
+            cost_list.append(cost)
+            if (i % 10000 == 0) or (i == self.iters - 1):
+                print("iters=", i, "cost=", cost)
+        return self.theeta, cost
+
+// predicts y_predict for the coresponding theeta and acurracy for test and train data
+
+    def predict(self,x,y):
+        ones = np.ones([x.shape[0], 1])
+        x = np.concatenate((ones, x), axis=1)
+        y_pred = x.dot(self.theeta)
+        error = 0
+        for i in range(0, len(y)):
+            err = abs((y_pred[i] - y[i]) / y[i])
+            error += err
+        error = error / len(y)
+        acc = 1 - error
+        return acc * 100
